@@ -43,8 +43,12 @@ def show_home_page():
     for file in files:
         # ファイル名から拡張子を取り除く
         title = os.path.splitext(file)[0]
-        button = tk.Button(frame, text=title, command=lambda f=file: show_file_content(f))
-        button.pack(fill=tk.X, padx=5, pady=2)
+        button_frame = tk.Frame(frame)
+        button_frame.pack(fill=tk.X, padx=5, pady=2)
+        button = tk.Button(button_frame, text=title, command=lambda f=file: show_file_content(f))
+        button.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        delete_button = tk.Button(button_frame, text="削除", command=lambda f=file: delete_file(f))
+        delete_button.pack(side=tk.RIGHT)
 
 def show_file_content(filename):
     file_path = os.path.join(data_dir, filename)
@@ -90,6 +94,15 @@ def open_register_window():
 
     register_button = tk.Button(register_window, text="登録", command=register)
     register_button.pack()
+
+def delete_file(filename):
+    file_path = os.path.join(data_dir, filename)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        messagebox.showinfo("削除成功", f"{os.path.splitext(filename)[0]} のファイルが削除されました。")
+        show_home_page()
+    else:
+        messagebox.showwarning("エラー", "ファイルが見つかりませんでした。")
 
 # ウィンドウの作成と、Tkinterオブジェクトの取得
 root = tk.Tk()
