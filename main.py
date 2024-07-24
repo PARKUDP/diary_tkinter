@@ -97,8 +97,8 @@ class DiaryApp:
                 file_path = os.path.join(self.data_dir, f"{title}.txt")
                 with open(file_path, 'w', encoding='utf-8') as file:
                     file.write(content)
-                register_window.destroy()
                 messagebox.showinfo("登録成功", "日記を登録することができました。")
+                register_window.destroy()
                 self.show_home_page()  
             else:
                 messagebox.showwarning("警告", "タイトルと本文をどっちも入力する必要があります。")
