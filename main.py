@@ -79,32 +79,33 @@ class DiaryApp:
         text_widget.config(state=tk.DISABLED)
 
     def open_register_window(self):
-        register_window = tk.Toplevel(self.root)
-        register_window.title("日記作成")
+        self.register_window = tk.Toplevel(self.root)
+        self.register_window.title("日記作成")
 
-        tk.Label(register_window, text="タイトル").pack()
-        title_entry = tk.Entry(register_window)
-        title_entry.pack()
+        tk.Label(self.register_window, text="タイトル").pack()
+        self.title_entry = tk.Entry(self.register_window)
+        self.title_entry.pack()
 
-        tk.Label(register_window, text="本文").pack()
-        content_text = tk.Text(register_window, height=10, width=40)
-        content_text.pack()
+        tk.Label(self.register_window, text="本文").pack()
+        self.content_text = tk.Text(self.register_window, height=10, width=40)
+        self.content_text.pack()
 
         def register():
-            title = title_entry.get()
-            content = content_text.get("1.0", tk.END).strip()
+            title = self.title_entry.get()
+            content = self.content_text.get("1.0", tk.END).strip()
             if title and content:
                 file_path = os.path.join(self.data_dir, f"{title}.txt")
                 with open(file_path, 'w', encoding='utf-8') as file:
                     file.write(content)
+                self.register_window.destroy()
                 messagebox.showinfo("登録成功", "日記を登録することができました。")
-                register_window.destroy()
-                self.show_home_page()  
+                self.show_home_page()
             else:
                 messagebox.showwarning("警告", "タイトルと本文をどっちも入力する必要があります。")
 
-        register_button = tk.Button(register_window, text="登録", command=register)
-        register_button.pack()
+        self.register_button = tk.Button(self.register_window, text="登録", command=register)
+        self.register_button.pack()
+
 
     def delete_file(self, filename):
         file_path = os.path.join(self.data_dir, filename)

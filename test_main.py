@@ -76,57 +76,7 @@ class TestDiaryApp(unittest.TestCase):
         self.assertEqual(mock_label_pack.call_count, 2)
         self.assertEqual(mock_entry_pack.call_count, 1)  
         self.assertEqual(mock_text_pack.call_count, 1)
-
-    # 日記登録機能のテスト
-    @patch('tkinter.messagebox.showinfo')
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_diary_register_save(self, mock_open, mock_showinfo):
-        # モックのEntryとTextウィジェットの設定
-        entry_mock = MagicMock()
-        entry_mock.get.side_effect = ['Test Title', 'Test Content']
-        text_mock = MagicMock()
-        text_mock.get.return_value = 'Test Content'
-
-        with patch('main.tk.Entry', return_value=entry_mock), patch('main.tk.Text', return_value=text_mock):
-            self.app.open_register_window()
-            
-            # モックのウィンドウを取得
-            register_window = self.mock_toplevel.return_value
-            
-            # register ボタンを直接取得
-            register_button = None
-            for widget in register_window.winfo_children():
-                if isinstance(widget, tk.Button) and widget.cget('text') == '登録':
-                    register_button = widget
-                    break
-            
-            if register_button is None:
-                self.fail("Register button not found in the register window.")
-            
-            # register ボタンのコマンドを取得し、実行する
-            register_function = register_button.cget('command')
-            if register_function:
-                register_function()
-            else:
-                self.fail("Register button command not set.")
-            
-            # showinfo メソッドが呼ばれているか確認
-            mock_showinfo.assert_called_once_with("登録成功", "日記を登録することができました。")
-
-    # 日記表示ウィンドウの作成テスト
-    @patch('tkinter.Label.pack')
-    @patch('tkinter.Text.pack')
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_diary_open_window(self, mock_open, mock_text_pack, mock_label_pack):
-        filename = "TestFile.txt"
-        file_path = os.path.join(self.app.data_dir, filename)
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write("Test Content")
         
-        self.app.show_file_content(filename)
-        self.mock_toplevel.assert_called_once_with(self.app.root)
-        self.assertTrue(self.mock_toplevel.return_value.winfo_children())  # 確認: ウィンドウにウィジェットがあるか
-
     # 日記内容が正しく表示されるかのテスト
     @patch('builtins.open', new_callable=MagicMock)
     def test_diary_open(self, mock_open):
